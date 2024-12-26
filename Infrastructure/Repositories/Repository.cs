@@ -1,4 +1,5 @@
 ﻿using HouseBrokerApp.Domain.Interfaces;
+using HouseBrokerApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace HouseBrokerApp.Infrastructure.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly DbContext _context;
+        private readonly HouseBrokerDbContext _context;
 
-        public Repository(DbContext context)
+        public Repository(HouseBrokerDbContext context)
         {
             _context = context;
         }

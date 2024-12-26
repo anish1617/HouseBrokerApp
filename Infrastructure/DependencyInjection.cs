@@ -15,7 +15,8 @@ namespace HouseBrokerApp.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<HouseBrokerDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<HouseBrokerDbContext>(options => options.UseSqlServer(connectionString, sqlOptions => 
+            sqlOptions.MigrationsAssembly("Infrastructure")));
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 

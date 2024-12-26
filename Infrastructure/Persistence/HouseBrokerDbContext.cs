@@ -13,5 +13,10 @@ namespace HouseBrokerApp.Infrastructure.Persistence
         public HouseBrokerDbContext(DbContextOptions<HouseBrokerDbContext> options) : base(options) { }
 
         public DbSet<Property> Properties { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
