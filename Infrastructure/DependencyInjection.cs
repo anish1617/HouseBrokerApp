@@ -1,6 +1,7 @@
 ﻿using HouseBrokerApp.Domain.Interfaces;
 using HouseBrokerApp.Infrastructure.Persistence;
 using HouseBrokerApp.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -17,6 +18,10 @@ namespace HouseBrokerApp.Infrastructure
         {
             services.AddDbContext<HouseBrokerDbContext>(options => options.UseSqlServer(connectionString, sqlOptions => 
             sqlOptions.MigrationsAssembly("Infrastructure")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<HouseBrokerDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
