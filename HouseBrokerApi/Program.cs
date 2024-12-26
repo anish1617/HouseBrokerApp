@@ -1,8 +1,12 @@
+
+using HouseBrokerApp.Application.Services;
 using HouseBrokerApp.Application.UseCases;
 using HouseBrokerApp.Infrastructure;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -13,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddInfrastructure(connectionString);
 builder.Services.AddScoped<GetAllPropertiesQuery>();
-
+builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -25,11 +29,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = "HouseBrokerApp",
             ValidAudience = "HouseBrokerApp",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secretkey123"))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your-very-strong-secret-key-128bits"))
 
         };
     });
-builder.Services.AddControllers();
+builder.Services.AddControllers(config =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
+    config.Filters.Add(new AuthorizeFilter(policy));
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
